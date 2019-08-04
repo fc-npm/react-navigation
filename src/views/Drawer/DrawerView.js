@@ -5,12 +5,14 @@ import DrawerLayout from 'react-native-drawer-layout-polyfill';
 import addNavigationHelpers from '../../addNavigationHelpers';
 import DrawerSidebar from './DrawerSidebar';
 import getChildEventSubscriber from '../../getChildEventSubscriber';
+import { NAVIGATE } from '../../NavigationActions';
 
 /**
  * Component that renders the drawer.
  */
 export default class DrawerView extends React.PureComponent {
   state = {
+    drawerScreenKey: '1',
     drawerWidth:
       typeof this.props.drawerWidth === 'function'
         ? this.props.drawerWidth()
@@ -23,10 +25,16 @@ export default class DrawerView extends React.PureComponent {
     this._updateScreenNavigation(this.props.navigation);
 
     Dimensions.addEventListener('change', this._updateWidth);
+    this._updateListener = this.props.navigation.addListener('action', payload => {
+      if (this.props.enableForceUpdate) {
+        this._reConstructScreen(payload);
+      }
+    });
   }
 
   componentWillUnmount() {
     Dimensions.removeEventListener('change', this._updateWidth);
+    this._updateListener.remove();
   }
 
   componentDidUpdate() {
@@ -151,6 +159,23 @@ export default class DrawerView extends React.PureComponent {
     );
   };
 
+  _reConstructScreen ({ action, lastState: preState, state }) {
+    if(action.type !== NAVIGATE || state.index === 1) {
+      return;
+    }
+
+    const preStack = preState.routes[0];
+    const curStack = state.routes[0];
+    const curRouteName = curStack.routes[curStack.index].routeName;
+    const preRouteName = preStack.routes[preStack.index].routeName;
+
+    if (action.routeName !== 'DrawerClose' && curRouteName === preRouteName) {
+      this.setState({
+        drawerScreenKey: Math.random();
+      })
+    }
+  }
+
   render() {
     const DrawerScreen = this.props.router.getComponentForRouteName(
       this.props.drawerCloseRoute
@@ -183,6 +208,7 @@ export default class DrawerView extends React.PureComponent {
         }
       >
         <DrawerScreen
+          key={this.state.drawerScreenKey}
           screenProps={this.props.screenProps}
           navigation={this._screenNavigationProp}
         />
