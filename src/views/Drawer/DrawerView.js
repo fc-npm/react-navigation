@@ -5,7 +5,7 @@ import DrawerLayout from 'react-native-drawer-layout-polyfill';
 import addNavigationHelpers from '../../addNavigationHelpers';
 import DrawerSidebar from './DrawerSidebar';
 import getChildEventSubscriber from '../../getChildEventSubscriber';
-import { NAVIGATE } from '../../NavigationActions';
+import NavigationActions from '../../NavigationActions';
 
 /**
  * Component that renders the drawer.
@@ -160,7 +160,7 @@ export default class DrawerView extends React.PureComponent {
   };
 
   _reConstructScreen ({ action, lastState: preState, state }) {
-    if(action.type !== NAVIGATE || state.index === 1) {
+    if(action.type !== NavigationActions.NAVIGATE || state.index === 1) {
       return;
     }
 
@@ -171,7 +171,7 @@ export default class DrawerView extends React.PureComponent {
 
     if (action.routeName !== 'DrawerClose' && curRouteName === preRouteName) {
       this.setState({
-        drawerScreenKey: Math.random();
+        drawerScreenKey: Math.random()
       })
     }
   }
