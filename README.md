@@ -63,6 +63,18 @@ Web support was [not a priority for the 1.0 release](https://github.com/react-co
 
 This library has adopted a Code of Conduct that we expect project participants to adhere to. Please read the [full text](https://github.com/react-community/react-navigation/blob/master/CODE_OF_CONDUCT.md) so that you can understand what actions will and will not be tolerated.
 
+## What is enableForceUpdate ？  
+The property makes it possible to refresh the DrawerNavigator without refreshing whole app, it could be very meaningful when you wanna reset all data and screen when clicking current tab in drawer. 
+
+## How to use enableForceUpdate ？   
+Because what the entrance of react-navigation returned is only a class not instance, you can put whatever properties at place where the instance generates.
+Like following: 
+
+```
+const Nav = DrawerNavigator(...);
+return <Nav enableForceUpdate />
+```
+
 ## License
 
 React-navigation is licensed under the [BSD 2-clause "Simplified" License](https://github.com/react-community/react-navigation/blob/master/LICENSE).
