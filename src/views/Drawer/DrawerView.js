@@ -160,7 +160,7 @@ export default class DrawerView extends React.PureComponent {
   };
 
   _reConstructScreen ({ action, lastState: preState, state }) {
-    if(action.type !== NavigationActions.NAVIGATE) { // 屏蔽 NavigationActions.INIT 和除 NAVIGATE 以外的 action
+    if(action.type !== NavigationActions.NAVIGATE || state.index === 1) { // 屏蔽 NavigationActions.INIT 和除 NAVIGATE 以外的 action
       return;
     }
 

@@ -96,5 +96,5 @@
     "test": "npm run lint && npm run jest",
     "test-update-snapshot": "jest --updateSnapshot"
   },
-  "version": "1.6.4"
+  "version": "1.6.5"
 }
