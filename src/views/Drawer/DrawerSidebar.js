@@ -96,6 +96,7 @@ class DrawerSidebar extends React.PureComponent {
           getLabel={this._getLabel}
           renderIcon={this._renderIcon}
           onItemPress={this._onItemPress}
+          onItemTap={this.props.onItemTap}
           router={this.props.router}
           drawerPosition={this.props.drawerPosition}
         />

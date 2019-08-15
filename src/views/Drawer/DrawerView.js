@@ -25,16 +25,10 @@ export default class DrawerView extends React.PureComponent {
     this._updateScreenNavigation(this.props.navigation);
 
     Dimensions.addEventListener('change', this._updateWidth);
-    this._updateListener = this.props.navigation.addListener('action', payload => {
-      if (this.props.enableForceUpdate) {
-        this._reConstructScreen(payload);
-      }
-    });
   }
 
   componentWillUnmount() {
     Dimensions.removeEventListener('change', this._updateWidth);
-    this._updateListener.remove();
   }
 
   componentDidUpdate() {
@@ -148,6 +142,7 @@ export default class DrawerView extends React.PureComponent {
         screenProps={this.props.screenProps}
         navigation={this._screenNavigationProp}
         router={this.props.router}
+        onItemTap={this._reConstructScreen}
         contentComponent={this.props.contentComponent}
         contentOptions={this.props.contentOptions}
         drawerPosition={this.props.drawerPosition}
@@ -159,20 +154,8 @@ export default class DrawerView extends React.PureComponent {
     );
   };
 
-  _reConstructScreen ({ action, lastState: preState, state }) {
-    if(action.type !== NavigationActions.NAVIGATE) { // 屏蔽 NavigationActions.INIT 和除 NAVIGATE 以外的 action
-      return;
-    }
-
-    const preStack = preState.routes[0];
-    const curStack = state.routes[0];
-    const curRouteName = curStack.routes[curStack.index].routeName; // 当前抽屉名称
-    const preRouteName = preStack.routes[preStack.index].routeName; // 上一个抽屉名称
-
-    const isCloseAction = state.index === 0 && preState.index === 1;
-    const isClosedByTab = isCloseAction && action.routeName !== 'DrawerClose'
-
-    if (isClosedByTab && curRouteName === preRouteName) {
+  _reConstructScreen = (needUdpate) => {
+    if (needUdpate) {
       this.setState({
         drawerScreenKey: Math.random()
       })
