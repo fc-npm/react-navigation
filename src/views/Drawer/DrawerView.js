@@ -160,16 +160,19 @@ export default class DrawerView extends React.PureComponent {
   };
 
   _reConstructScreen ({ action, lastState: preState, state }) {
-    if(action.type !== NavigationActions.NAVIGATE || state.index === 1) {
+    if(action.type !== NavigationActions.NAVIGATE) { // 屏蔽 NavigationActions.INIT 和除 NAVIGATE 以外的 action
       return;
     }
 
     const preStack = preState.routes[0];
     const curStack = state.routes[0];
-    const curRouteName = curStack.routes[curStack.index].routeName;
-    const preRouteName = preStack.routes[preStack.index].routeName;
+    const curRouteName = curStack.routes[curStack.index].routeName; // 当前抽屉名称
+    const preRouteName = preStack.routes[preStack.index].routeName; // 上一个抽屉名称
 
-    if (action.routeName !== 'DrawerClose' && curRouteName === preRouteName) {
+    const isCloseAction = state.index === 0 && preState.index === 1;
+    const isClosedByTab = isCloseAction && action.routeName !== 'DrawerClose'
+
+    if (isClosedByTab && curRouteName === preRouteName) {
       this.setState({
         drawerScreenKey: Math.random()
       })
